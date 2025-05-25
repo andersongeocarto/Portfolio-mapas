@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projeto 1: Distribuição Populacional em Cidades</title>
+    <link rel="stylesheet" href="../style.css"> <link rel="stylesheet" href="project-styles.css"> <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoTJsAEYjFkSzwWkLFPc/fa6IZyjyAyfP8fVFF0="
+     crossorigin=""/>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Projeto 1: Distribuição Populacional</h1>
+            <nav>
+                <ul>
+                    <li><a href="../index.html">Voltar ao Portfólio</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="map-container">
+        <div class="map-header">
+            <h1>Distribuição Populacional em Cidades</h1>
+        </div>
+        <div class="map-content">
+            <div id="map"></div>
+            <div class="map-description">
+                <p>Este mapa interativo visualiza a densidade populacional em diferentes bairros de uma cidade fictícia. Os círculos no mapa representam áreas, e o tamanho e a cor dos círculos indicam a concentração populacional. Quanto maior e mais escuro o círculo, maior a população.</p>
+                <p><strong>Tecnologias Utilizadas:</strong> HTML, CSS, JavaScript, Leaflet.js, GeoJSON (para dados de exemplo).</p>
+                <h3>Análise e Insights:</h3>
+                <ul>
+                    <li>Identificação de áreas de alta e baixa densidade.</li>
+                    <li>Auxílio no planejamento urbano e alocação de recursos.</li>
+                    <li>Visualização intuitiva para leigos e especialistas.</li>
+                </ul>
+            </div>
+            <a href="../index.html" class="back-link">← Voltar ao Portfólio</a>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     integrity="sha256-20n6qqzjr0rpZlsa0n9A+z/TwEspgdC8x9g7Rzsm+3G8="
+     crossorigin=""></script>
+    <script>
+        // JavaScript para o Mapa (project1.html)
+        var map = L.map('map').setView([-23.55, -46.63], 12); // Coordenadas de exemplo (São Paulo) e zoom
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Dados de exemplo (GeoJSON para bairros com população)
+        var populationData = {
+            "type": "FeatureCollection",
+            "features": [
+                {
+                    "type": "Feature",
+                    "properties": { "name": "Centro", "population": 85000 },
+                    "geometry": { "type": "Point", "coordinates": [-46.63, -23.55] }
+                },
+                {
+                    "type": "Feature",
+                    "properties": { "name": "Liberdade", "population": 40000 },
+                    "geometry": { "type": "Point", "coordinates": [-46.638, -23.56] }
+                },
+                {
+                    "type": "Feature",
+                    "properties": { "name": "Vila Mariana", "population": 120000 },
+                    "geometry": { "type": "Point", "coordinates": [-46.643, -23.58] }
+                },
+                {
+                    "type": "Feature",
+                    "properties": { "name": "Pinheiros", "population": 95000 },
+                    "geometry": { "type": "Point", "coordinates": [-46.69, -23.565] }
+                },
+                {
+                    "type": "Feature",
+                    "properties": { "name": "Jardins", "population": 70000 },
+                    "geometry": { "type": "Point", "coordinates": [-46.66, -23.57] }
+                }
+            ]
+        };
+
+        // Função para obter a cor com base na população
+        function getColor(d) {
+            return d > 100000 ? '#800026' :
+                   d > 75000  ? '#BD0026' :
+                   d > 50000  ? '#E31A1C' :
+                   d > 25000  ? '#FC4E2A' :
+                                '#FFEDA0';
+        }
+
+        // Adicionar marcadores de círculo com base na população
+        L.geoJson(populationData, {
+            pointToLayer: function (feature, latlng) {
+                return L.circleMarker(latlng, {
+                    radius: feature.properties.population / 1500, // Ajustar o raio com base na população
+                    fillColor: getColor(feature.properties.population),
+                    color: "#000",
+                    weight: 1,
+                    opacity: 1,
+                    fillOpacity: 0.7
+                }).bindPopup(`<b>${feature.properties.name}</b><br>População: ${feature.properties.population}`);
+            }
+        }).addTo(map);
+    </script>
+</body>
+</html>
